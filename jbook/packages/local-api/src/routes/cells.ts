@@ -1,21 +1,57 @@
 import express from 'express';
+import fs from 'fs/promises';
+import path from 'path';
 
-const router = express.Router();
+interface Cell {
+  id: string;
+  content: string;
+  type: 'text' | 'code';
+}
 
-router.get('/cells', async (req, res) => {
-  // make sure the cell storage file exists
-  // If the file does not exist, add in default list of cells
+interface LocalApiError {
+  code: string;
+}
 
-  // Read the file
-  // Parse a list of cells out of it
-  // Send list of cells back to browser
-});
+export const CreateCellsRouter = (filename: string, dir: string) => {
+  const router = express.Router();
+  router.use(express.json());
 
-router.post('/cells', async (req, res) => {
-  // Make sure the file exists
-  // I fnot, create it
+  const fullPath = path.join(dir, filename);
 
-  // Take the list of cells from the request object
-  // Serialize them (turn into to format that can be read)
-  // Write the cells into the file
-});
+  router.get('/cells', async (req, res) => {
+    const isLocalApiError = (err: any): err is isLocalApiError => {
+      return typeof err.code === "string";
+    };
+    try {
+      // read the file
+      const result = await fs.readFile(fullPath, { encoding: 'utf-8' });
+
+      res.sendStatus(JSON.parse(result));
+
+    } catch (err) {
+      if (isLocalApiError(err)) {
+        if (err.code === "ENOENT") {
+          await fs.writeFile(fullPath, '[]', 'utf-8');
+          res.send([]);
+        }
+      } else {
+        throw err;
+      }
+    }
+  });
+
+
+
+  router.post('/cells', async (req, res) => {
+    // Take the list of cells from the request object
+    // Serialize them (turn into to format that can be read)
+    const { cells }: { cells: Cell[] } = req.body;
+
+    // Write the cells into the file
+    await fs.writeFile(fullPath, JSON.stringify(cells), 'utf-8');
+
+    res.send({ status: 'ok' });
+  });
+
+  return router;
+};
