@@ -6,7 +6,7 @@ import { RootState } from "../reducers";
 
 export const persistMiddleware = ({
   dispatch,
-  getState
+  getState,
 }: {
   dispatch: Dispatch<Action>;
   getState: () => RootState;
