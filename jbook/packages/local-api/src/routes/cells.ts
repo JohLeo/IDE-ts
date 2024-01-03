@@ -19,11 +19,10 @@ export const CreateCellsRouter = (filename: string, dir: string) => {
   const fullPath = path.join(dir, filename);
 
   router.get('/cells', async (req, res) => {
-    const isLocalApiError = (err: any): err is isLocalApiError => {
+    const isLocalApiError = (err: any): err is LocalApiError => {
       return typeof err.code === "string";
     };
     try {
-      // read the file
       const result = await fs.readFile(fullPath, { encoding: 'utf-8' });
 
       res.sendStatus(JSON.parse(result));
