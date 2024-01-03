@@ -1,6 +1,6 @@
 {
   "name": "@jsnote-jl/local-api",
-  "version": "4.0.0",
+  "version": "3.0.0",
   "description": "",
   "files": [
     "dist"
@@ -23,10 +23,10 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@jsnote-jl/local-client": "^4.0.0",
+    "@jsnote-jl/local-client": "^3.0.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "http-proxy-middleware": "^2.0.6"
   },
-  "gitHead": "62136f9c7bd724357a8b76dfd49b745e42445e04"
+  "gitHead": "0e7b2101c2f182a48a86fd6d034da4e9d97d5fc4"
 }
